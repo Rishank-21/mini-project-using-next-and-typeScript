@@ -25,7 +25,13 @@ export async function POST(request : NextRequest){
     if(file){
       imageUrl = await uploadOnCloudinary(file)
     }
-    const user = await User.findByIdAndUpdate(session.user.id, { name , image : imageUrl}, {new : true})
+    const updateData: any = { name };
+    if (imageUrl) {
+      updateData.image = imageUrl;
+    }
+    const user = await User.findByIdAndUpdate(session.user.id, updateData, {
+      new: true,
+    });
     if(!user) return NextResponse.json({message : "User Not Found"},{status : 404}) 
 
 
